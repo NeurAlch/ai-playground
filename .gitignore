@@ -131,3 +131,8 @@ dmypy.json
 # Editors
 .vscode
 .idea
+
+# Node
+node_modules
+.parcel-cache
+dist

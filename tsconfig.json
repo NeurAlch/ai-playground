@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "target": "es6",
+    "outDir": "dist",
+    "allowJs": false,
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": [
+      "node",
+      "jasmine"
+    ]
+  },
+  "include": [
+    "src/**/*",
+  ]
+}

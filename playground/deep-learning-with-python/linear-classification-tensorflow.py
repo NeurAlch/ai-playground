@@ -19,11 +19,15 @@ positive_samples = np.random.multivariate_normal(
 )
 
 # shape (2000, 2)
-inputs = np.vstack((negative_samples, positive_samples)).astype(np.float32)
+inputs = np.vstack((
+    negative_samples,
+    positive_samples),
+).astype(np.float32)
 
+# target labels (0, 1)
 targets = np.vstack((
-    np.zeros((num_samples_per_class, 1), dtype=np.float32),
-    np.ones((num_samples_per_class, 1), dtype=np.float32),
+    np.zeros((num_samples_per_class, 1), dtype=np.float32),  # negative samples
+    np.ones((num_samples_per_class, 1), dtype=np.float32),  # positive samples
 ))
 
 # 2D points
@@ -49,6 +53,7 @@ def square_loss(targets, predictions):
     # average loss scores to a single scalar
     return tf.reduce_mean(per_sample_losses)
 
+
 # larger learning rate since we are using batch training and not mini-batch training
 learning_rate = 0.1
 
@@ -59,11 +64,11 @@ def training_step(inputs, targets):
         loss = square_loss(targets, predictions)
 
     # compute gradients
-    dW, db = tape.gradient(loss, [W, b])
+    grad_loss_wrt_W, grad_loss_wrt_b = tape.gradient(loss, [W, b])
 
     # update weights
-    W.assign_sub(learning_rate * dW)
-    b.assign_sub(learning_rate * db)
+    W.assign_sub(learning_rate * grad_loss_wrt_W)
+    b.assign_sub(learning_rate * grad_loss_wrt_b)
 
 
 epochs = 50

@@ -7,14 +7,14 @@ num_samples_per_class = 1000
 # shape (1000, 2)
 negative_samples = np.random.multivariate_normal(
     mean=[0, 3],
-    cov=[[1., 0.5], [0.5, 1.]],  # 2D points
+    cov=[[1., .5], [.5, 1.]],  # 2D points
     size=num_samples_per_class,
 )
 
 # shape (1000, 2)
 positive_samples = np.random.multivariate_normal(
     mean=[3, 0],
-    cov=[[1., 0.5], [0.5, 1.]],  # 2D points
+    cov=[[.5, 1.], [1., .5]],  # 2D points
     size=num_samples_per_class,
 )
 
@@ -28,6 +28,11 @@ inputs = np.vstack((
 targets = np.vstack((
     np.zeros((num_samples_per_class, 1), dtype=np.float32),  # negative samples
     np.ones((num_samples_per_class, 1), dtype=np.float32),  # positive samples
+))
+
+targets_2 = np.vstack((
+    np.ones((num_samples_per_class, 1), dtype=np.float32),  # positive samples
+    np.zeros((num_samples_per_class, 1), dtype=np.float32),  # negative samples
 ))
 
 # 2D points
@@ -73,17 +78,35 @@ def training_step(inputs, targets):
     return loss
 
 
-epochs = 50
-
 # training loop
-for step in range(epochs):
+for step in range(50):
     loss = training_step(inputs, targets)
-    print(f"Epoch: {step}, Loss: {loss}")
+    print(f"1: Epoch: {step}, Loss: {loss}")
 
 predictions = model(inputs)
+
+# re-train for new targets
+for step in range(25):
+    loss = training_step(inputs, targets_2)
+    print(f"2: Epoch: {step}, Loss: {loss}")
+
+predictions_2 = model(inputs)
 
 x = np.linspace(-1, 4, 100)
 y = -W[0] / W[1] * x + (0.5 - b) / W[1]
 plt.plot(x, y, '-r')
-plt.scatter(inputs[:, 0], inputs[:, 1], c=predictions[:, 0] > 0.5)
-plt.savefig('linear-classification-tensorflow.png')
+plt.scatter(
+    inputs[:, 0],
+    inputs[:, 1],
+    c=predictions[:, 0] > 0.5
+)
+plt.savefig('linear-classification-tensorflow-multiple-1.png')
+
+plt.clf()
+plt.plot(x, y, '-r')
+plt.scatter(
+    inputs[:, 0],
+    inputs[:, 1],
+    c=predictions_2[:, 0] > 0.5
+)
+plt.savefig('linear-classification-tensorflow-multiple-2.png')

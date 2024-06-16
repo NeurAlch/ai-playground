@@ -1,0 +1,4 @@
+- pyenv install 3.12
+- pyenv shell 3.12
+- poetry env use 3.12
+- poetry add torch
